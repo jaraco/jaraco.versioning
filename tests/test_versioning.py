@@ -19,11 +19,11 @@ class TestVersioning:
         Versioning should only choose relevant tags (versions)
         """
         mgr = VersionedObject(get_tags=lambda: tags)
-        tags = set(['foo', 'bar', '3.0'])
+        tags = {'foo', 'bar', '3.0'}
         assert mgr.get_tagged_version() == packaging.version.Version('3.0')
-        tags = set([])
+        tags = set()
         assert mgr.get_tagged_version() is None
-        tags = set(['foo', 'bar'])
+        tags = {'foo', 'bar'}
         assert mgr.get_tagged_version() is None
 
     def test_tag_priority(self):
@@ -32,9 +32,9 @@ class TestVersioning:
         support should infer the precedence (choose latest).
         """
         mgr = VersionedObject(get_tags=lambda: tags)
-        tags = set(['1.0', '1.1'])
+        tags = {'1.0', '1.1'}
         assert mgr.get_tagged_version() == packaging.version.Version('1.1')
-        tags = set(['0.10', '0.9'])
+        tags = {'0.10', '0.9'}
         assert mgr.get_tagged_version() == packaging.version.Version('0.10')
 
     def test_defer_to_parent_tag(self):
@@ -42,13 +42,13 @@ class TestVersioning:
         Use the parent tag if on the tip
         """
         mgr = VersionedObject(
-            get_tags=lambda rev=None: set(['tip']),
-            get_parent_tags=lambda rev=None: set(['1.0']),
+            get_tags=lambda rev=None: {'tip'},
+            get_parent_tags=lambda rev=None: {'1.0'},
         )
         assert mgr.get_tagged_version() == packaging.version.Version('1.0')
 
     def test_get_next_version(self):
-        mgr = VersionedObject(get_repo_tags=lambda: set([]))
+        mgr = VersionedObject(get_repo_tags=lambda: set())
         assert mgr.get_next_version() == '0.0.1'
 
     def test_local_revision_not_tagged(self):
@@ -56,11 +56,11 @@ class TestVersioning:
         When no tags are available, use the greatest tag and add the increment
         """
         mgr = VersionedObject(
-            get_tags=lambda rev=None: set([]),
-            get_repo_tags=lambda: set(
+            get_tags=lambda rev=None: set(),
+            get_repo_tags=lambda: {
                 collections.namedtuple('tag', 'tag')(var)
                 for var in ['foo', 'bar', '1.0']
-            ),
+            },
         )
         assert mgr.get_tagged_version() is None
         assert mgr.get_next_version() == packaging.version.Version('1.0.1')
