@@ -106,9 +106,9 @@ class SummableVersion(packaging.version.Version):
         return reduce(combine, reversed(self._version.release))
 
 
-class VersionManagement:
+class Versioned:
     """
-    Version functions for RepoManager classes
+    Version functionality mix-ins for jaraco.vcs.Repo classes.
     """
 
     increment = 'patch'
@@ -221,7 +221,7 @@ class VersionManagement:
         >>> VM_infer(None, '0.1')
         '0.1'
         """
-        increment = VersionManagement.semantic_increment.get(increment, increment)
+        increment = Versioned.semantic_increment.get(increment, increment)
         if last_version is None:
             return increment
         last_version = SummableVersion(str(last_version))
@@ -235,3 +235,7 @@ class VersionManagement:
         sum = last_version + increment
         sum.reset_less_significant(increment)
         return sum
+
+
+# for compatibility
+VersionManagement = Versioned

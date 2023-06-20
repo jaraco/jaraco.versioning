@@ -7,6 +7,8 @@ Added support for semantic indicators "major", "minor", and
 Added ``semver()`` function to ensure a version is ready for
 a semantic version context.
 
+Renamed ``VersionManagement`` to ``Versioned``.
+
 v1.0.0
 ======
 
