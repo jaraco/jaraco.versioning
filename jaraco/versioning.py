@@ -185,40 +185,40 @@ class Versioned:
 
         Set up a shorthand for examples.
 
-        >>> def VM_infer(*params):
-        ...     return str(VersionManagement.infer_next_version(*params))
+        >>> def infer_next(*params):
+        ...     return str(Versioned.infer_next_version(*params))
 
-        >>> VM_infer('3.2', '0.0.1')
+        >>> infer_next('3.2', '0.0.1')
         '3.2.1'
-        >>> VM_infer(packaging.version.Version('3.2'), '0.0.1')
+        >>> infer_next(packaging.version.Version('3.2'), '0.0.1')
         '3.2.1'
-        >>> VM_infer('3.2.3', '0.1')
+        >>> infer_next('3.2.3', '0.1')
         '3.3'
-        >>> VM_infer('3.1.2', '1.0')
+        >>> infer_next('3.1.2', '1.0')
         '4.0'
 
         A semantic identifier (major, minor, patch) may be used.
 
-        >>> VM_infer('3.1.2', 'major')
+        >>> infer_next('3.1.2', 'major')
         '4'
-        >>> VM_infer('3.1.2', 'minor')
+        >>> infer_next('3.1.2', 'minor')
         '3.2'
-        >>> VM_infer('3.1.2', 'patch')
+        >>> infer_next('3.1.2', 'patch')
         '3.1.3'
 
         Subversions never increment parent versions.
 
-        >>> VM_infer('3.0.9', '0.0.1')
+        >>> infer_next('3.0.9', '0.0.1')
         '3.0.10'
 
         If it's a prerelease version, just remove the prerelease.
 
-        >>> VM_infer('3.1a1', '0.0.1')
+        >>> infer_next('3.1a1', '0.0.1')
         '3.1'
 
         If there is no last version, use the increment itself
 
-        >>> VM_infer(None, '0.1')
+        >>> infer_next(None, '0.1')
         '0.1'
         """
         increment = Versioned.semantic_increment.get(increment, increment)

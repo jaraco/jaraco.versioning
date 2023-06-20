@@ -1,14 +1,12 @@
 import collections
+import types
 
 import packaging.version
 
 from jaraco import versioning
 
 
-class VersionedObject(versioning.VersionManagement):
-    def __init__(self, **kwargs):
-        self.__dict__.update(kwargs)
-
+class Versioned(versioning.Versioned, types.SimpleNamespace):
     def is_modified(self):
         return False
 
@@ -18,7 +16,7 @@ class TestVersioning:
         """
         Versioning should only choose relevant tags (versions)
         """
-        mgr = VersionedObject(get_tags=lambda: tags)
+        mgr = Versioned(get_tags=lambda: tags)
         tags = {'foo', 'bar', '3.0'}
         assert mgr.get_tagged_version() == packaging.version.Version('3.0')
         tags = set()
@@ -31,7 +29,7 @@ class TestVersioning:
         Since Mercurial provides tags in arbitrary order, the versioning
         support should infer the precedence (choose latest).
         """
-        mgr = VersionedObject(get_tags=lambda: tags)
+        mgr = Versioned(get_tags=lambda: tags)
         tags = {'1.0', '1.1'}
         assert mgr.get_tagged_version() == packaging.version.Version('1.1')
         tags = {'0.10', '0.9'}
@@ -41,21 +39,21 @@ class TestVersioning:
         """
         Use the parent tag if on the tip
         """
-        mgr = VersionedObject(
+        mgr = Versioned(
             get_tags=lambda rev=None: {'tip'},
             get_parent_tags=lambda rev=None: {'1.0'},
         )
         assert mgr.get_tagged_version() == packaging.version.Version('1.0')
 
     def test_get_next_version(self):
-        mgr = VersionedObject(get_repo_tags=lambda: set())
+        mgr = Versioned(get_repo_tags=lambda: set())
         assert mgr.get_next_version() == '0.0.1'
 
     def test_local_revision_not_tagged(self):
         """
         When no tags are available, use the greatest tag and add the increment
         """
-        mgr = VersionedObject(
+        mgr = Versioned(
             get_tags=lambda rev=None: set(),
             get_repo_tags=lambda: {
                 collections.namedtuple('tag', 'tag')(var)
