@@ -32,6 +32,21 @@ def rfind(pred, items):
     return -find(pred, reversed(items)) - 1
 
 
+def semver(orig):
+    """
+    >>> semver('1')
+    'v1.0.0'
+    >>> semver('1.2')
+    'v1.2.0'
+    >>> semver('10.11.12')
+    'v10.11.12'
+    >>> semver('v1.0')
+    'v1.0.0'
+    """
+    ver = SummableVersion(str(orig)) + packaging.version.Version('0.0.0')
+    return f'v{ver}'
+
+
 class SummableVersion(packaging.version.Version):
     """
     A special version that can be added to another Version.
