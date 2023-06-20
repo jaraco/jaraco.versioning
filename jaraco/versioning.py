@@ -96,7 +96,12 @@ class VersionManagement:
     Version functions for RepoManager classes
     """
 
-    increment = '0.0.1'
+    increment = 'patch'
+    semantic_increment = dict(
+        major='1',
+        minor='0.1',
+        patch='0.0.1',
+    )
 
     @staticmethod
     def __versions_from_tags(tags):
@@ -163,7 +168,7 @@ class VersionManagement:
         Given a simple application version (as a Version),
         and an increment (1.0, 0.1, or 0.0.1), guess the next version.
 
-        Set up a shorthand for examples
+        Set up a shorthand for examples.
 
         >>> def VM_infer(*params):
         ...     return str(VersionManagement.infer_next_version(*params))
@@ -177,7 +182,16 @@ class VersionManagement:
         >>> VM_infer('3.1.2', '1.0')
         '4.0'
 
-        Subversions never increment parent versions
+        A semantic identifier (major, minor, patch) may be used.
+
+        >>> VM_infer('3.1.2', 'major')
+        '4'
+        >>> VM_infer('3.1.2', 'minor')
+        '3.2'
+        >>> VM_infer('3.1.2', 'patch')
+        '3.1.3'
+
+        Subversions never increment parent versions.
 
         >>> VM_infer('3.0.9', '0.0.1')
         '3.0.10'
@@ -192,6 +206,7 @@ class VersionManagement:
         >>> VM_infer(None, '0.1')
         '0.1'
         """
+        increment = VersionManagement.semantic_increment.get(increment, increment)
         if last_version is None:
             return increment
         last_version = SummableVersion(str(last_version))
