@@ -1,5 +1,5 @@
-import operator
 import itertools
+import operator
 from functools import reduce
 
 import packaging.version
