@@ -1,5 +1,5 @@
-import collections
 import types
+import typing
 
 import packaging.version
 
@@ -56,7 +56,7 @@ class TestVersioning:
         mgr = Versioned(
             get_tags=lambda rev=None: set(),
             get_repo_tags=lambda: {
-                collections.namedtuple('tag', 'tag')(var)
+                typing.NamedTuple('Tag', [('tag', typing.Any)])(var)
                 for var in ['foo', 'bar', '1.0']
             },
         )
