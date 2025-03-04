@@ -56,7 +56,7 @@ class TestVersioning:
         mgr = Versioned(
             get_tags=lambda rev=None: set(),
             get_repo_tags=lambda: {
-                typing.NamedTuple('Tag', [('tag', typing.Any)])(var)
+                typing.NamedTuple('Tag', [('tag', str)])(var)
                 for var in ['foo', 'bar', '1.0']
             },
         )
