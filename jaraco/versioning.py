@@ -51,8 +51,8 @@ class SummableVersion(packaging.version.Version):
     """
     A special version that can be added to another Version.
 
-    >>> SummableVersion('1.1') + packaging.version.Version('2.3')
-    <Version('3.4')>
+    >>> str(SummableVersion('1.1') + packaging.version.Version('2.3'))
+    '3.4'
     """
 
     def __add__(self, other):
